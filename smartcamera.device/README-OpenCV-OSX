@@ -1,0 +1,21 @@
+  Installing OpenCV on OSX Sierra
+  
+  I followed the directions below.
+  You MUST include --with-java to get the OpenCV java bindings.
+  You can exclude the python stuff if you like.
+  
+  http://www.pyimagesearch.com/2016/12/19/install-opencv-3-on-macos-with-homebrew-the-easy-way/
+  
+  The jar ends up here:  /usr/local/opt/opencv3/share/OpenCV/java/opencv-320.jar
+  Its native library dependency (libopencv_java320.dylib) is in the same directory.
+  
+  To build in Eclipse you will also have to register the native lib for the jar
+  -- gleaned from https://deepturf.com/2016/08/08/install-opencv-on-mac-osx/:
+     Eclipse > Preferences > Java > Build Path > User Libraries
+        New  > “opencv3”
+        Select it and > Add External JARs
+            SHIFT+CMD+G in finder to be able to see/input a real path
+                /usr/local/opt/opencv3/share/OpenCV/java    - select opencv-320.jar
+            After adding the jar expand it in the dialog and select “Native library location” > Edit
+                add the same path - libopencv_java320.dylib is there - /usr/local/opt/opencv3/share/OpenCV/java
+ 
