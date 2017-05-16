@@ -9,6 +9,11 @@ specific systems.
 
 The kit is a work in progress.  See Status below.
 
+The Smart Camera IoT Device portion of the kit was part of the 
+ApacheCon/ApacheIoT 2017 talk:
+"Video Analytics at the Edge: Fun with Apache Edgent, OpenCv, and a Raspberry Pi".
+TODO-link
+
 ## Video Analytics at the Edge
   
 In short the idea is to evolve from a system like that in the upper image
@@ -61,9 +66,8 @@ The backend cloud based part of the system uses:
   - The Streaming Analytic Service to run an IBM Streams based application
   - IBM Streams to create a streaming analytic application that subscribes
     to face detection events and performs face recognition using a model
-    trained for specific faces.
-  - The streamsx.opencv Streams toolkit for using OpenCV for performing
-    image recognition.    
+    trained for specific faces. The streamsx.opencv Streams toolkit 
+    is used for performing face recognition.
 
 ## Status (11-May-2017)
 
