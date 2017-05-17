@@ -1,0 +1,113 @@
+Installing OpenCV on Raspberry Pi
+  
+  NOTE: at the step cmake step (step 5) in the directions below, 
+  where one confirms the correct info for python, notice the 
+  JNI/Java wrapper info is NO.
+  That seems to be a result of ant not being installed and in the path
+  and JAVA_HOME not being installed.
+  
+  The following worked after observing the problem in Step 5 however
+  doing it in Step 5 before the first run of cmake should work fine
+  
+    $ sudo apt-get install ant
+    $ which ant
+    /usr/bin/ant
+    
+    # set JAVA_HOME e.g., $JAVA_HOME/include/jni.h needs to be correct
+    $ export JAVA_HOME=/usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt 
+    
+    # if doing after an initial cmake with undesired results,
+    # rerun the cmake with the same args as before
+    $ cmake ...
+    # verify it now states the Java wrappers are included
+ 
+ NOTE: the directions builds/installs OpenCV 3.1.0.
+ You can adjust the info for 3.2.0 if you like in steps:
+   - Step 3 Download the OpenCV source code
+
+Follow the directions:  
+  http://www.pyimagesearch.com/2016/04/18/install-guide-raspberry-pi-3-raspbian-jessie-opencv-3/
+  
+The following should be present if all went well:
+
+$ ls /usr/local/share/OpenCV/java
+libopencv_java310.so opencv-310.jar
+
+export OPENCV_HOME=/usr/local/share/OpenCV  # so this works $OPENCV_HOME/java/opencv-320.jar
+
+If like me you did the install as a user account different than "pi"
+(doing an "su - <user>" in a terminal window owned by "pi"), then you need
+to give the other user access to the display or you'll end up with error
+messages like the following when you try to run the face detect samples:
+
+    $ ./run-non-edgent-face-detect.sh
+    Exception in thread "main" java.awt.AWTError: Can't connect to X11 window server using ':0.0' as the value of the DISPLAY variable.
+    
+
+    pi@raspberrypi:~  $ xhost +  # give others access
+    
+If OpenCV can't open the camera, then do this and try again:
+    $ sudo modprobe bcm2835-v4l2
+    
+That's not retained across reboots but you can add the following to /etc/modules
+
+    # camera with v4l2 driver
+    bcm2835-v4l2
+    
+Camera fps rate, delays, hangs, performance...
+- Using Pi3, Raspian jessie/4.4.50-v7+, 8MP PiCamera, OpenCV-3.1
+- Note: the fps rate is affected by the resize factor.
+  Increasing it reduces the image size and its processing time.
+  The default is 3.  Use --resize=N to change it.
+- NonEdgentFaceDetectApp.java / run-non-edgent-face-detect.sh
+  - The "poll rate" is really a "fixed delay time" (vs fixed poll rate).
+  - There was a noticeable delay in seeing motion particularly at lower
+    fps rates.  e.g., At target fps=3 rate, there is a 2-3sec delay
+    before moving an object into the field of view shows up.
+    There isn't a loss of frames, there's just some buffering happening
+    and an "old" frame is being retrieved.
+    Implemented a heuristic to avoid the delay.  See Camera.java.
+  - I see the following (pre-the FPS hueristic mentioned above):
+    FWIW, on Pi 3 (4 cores) seeing avgMsec getFrame: 3-5  imgProc: 35-51  render: 0
+    Target fps rate     Actual      Process CPU% (top)
+        3 (333ms sleep) 3           25-30
+        5               4              
+       10 (100ms sleep) 7           65-70
+       15               9
+       20               11          105-110
+       25               11-12
+       30               13
+       40               14
+       50               15          145-150
+       60               16
+       1000 (1ms sleep) 20-21       210-215
+       10000 (0ms sleep) 21         
+  - EdgentFaceDetectAppStatsApp / run-edgent-face-detect-stats.sh
+    - Note, fps is for Fixed Rate poll
+    - I see the following - NOTE: this is WITH publish COMMENTED OUT
+    Target fps rate     Actual      Process CPU% (top)
+        3               3               30-35
+        5               5               
+       10 (100ms poll)  10              100-110
+       15               15
+       20 (50ms poll)   20              210-215
+       25               20-21
+       30               21-22
+       40               20-21
+       1000 (1ms poll)  20-21           210-220
+       10000 (0ms poll) IAE
+  - ~system hangs - keyboard unresponsive, though if have shell window focus,
+    can hit ^C in the shell and typically kill the process after >1min.  
+    Otherwise, pull the plug. 
+    When investigating performance, I initially disabled all rendering and
+    the system would reliably hang shortly after processing the 850th frame.
+    That's regardless of the fps rate (i.e., just hangs sooner when running
+    at a higher fps rate).
+    I determined that the render processing's rgbFrame.get(0,0,buffer)
+    seemed to be the key to keeping the hang from occurring.
+    If you fully exclude render processing but still do the get() (and
+    don't do anything with the results) the hang doesn't happen.
+    This is with OpenCV-3.1.  ~Brief searching didn't yield any help.
+
+       
+
