@@ -1,0 +1,102 @@
+The scripts require EDGENT_HOME and OPENCV_HOME to be set.
+The scripts print an error message with info that includes sample values
+if they aren't set.
+
+#########
+To build
+
+    $ ./build.sh
+
+
+#########
+To run
+
+The scripts require that ../bin contains the smartcamera.device package's
+class files.  build.sh puts them there and so does Eclipse by default.
+
+The sample can run against either an IBM Watson IoT Platform IoT hub (WIoTP)
+or against a general MQTT server that you've setup.
+
+The Edgent device application defaults to WIoTP and there is a --mqtt option
+to use MQTT.  There are separate client applications for WIoTP vs MQTT. 
+
+// WIoTP
+Augment the wiotp-app-config.cfg and wiotp-device.cfg files with your
+WIoTP registered application and device info respectively.
+
+// MQTT
+Edit the mqtt-device.cfg file if necessary.  
+It defaults mqtt.serverURLs=tcp://localhost:1883
+Use this cfg file for the Edgent device app and the client apps.
+
+#########
+Start the App Client to listen for face detection events
+and render them.
+
+    // WIoTP
+    $ ./run-wiotp-app-client.sh wiotp-app-client.cfg
+    
+    // MQTT
+    $ ./run-mqtt-app-client.sh mqtt-device.cfg
+
+#########
+Start the Edgent app.  It opens the camera and renders the frames
+enhanced with face detection rectangles.  The images in the rectangles
+are published as device events to WIoTP.
+
+    // WIoTP
+    $ ./run-edgent-face-detect-iot-provider.sh --quickstart
+    or  
+    $ ./run-edgent-face-detect-iot-provider.sh wiotp-device.cfg
+    or  
+    $ ./run-edgent-face-detect-iot-provider.sh --noautostart wiotp-device.cfg
+    ... then must send startApp cmd to start detection
+    
+    // MQTT
+    $ ./run-edgent-face-detect-iot-provider.sh --mqtt mqtt-device.cfg
+    or  
+    $ ./run-edgent-face-detect-iot-provider.sh --noautostart --mqtt mqtt-device.cfg
+    ... then must send startApp cmd to start detection
+
+#########
+Send a stop-app device command via WIoTP/MQTT
+The Edgent app's frame rendering will freeze.
+
+    // WIoTP
+    $ ./run-wiotp-cmd-app-client.sh stopApp wiotp-app-client.cfg
+
+    // MQTT
+    $ ./run-mqtt-cmd-app-client.sh stopApp mqtt-device.cfg
+
+#########
+Send a start-app device command via WIoTP
+The Edgent app's frame rendering, face detection, publishing should restart
+
+    // WIoTP
+    $ ./run-wiotp-cmd-app-client.sh startApp wiotp-app-client.cfg
+
+    // MQTT
+    $ ./run-mqtt-cmd-app-client.sh startApp mqtt-device.cfg
+
+#########
+Send a change-poll-rate device command via WIoTP
+The Edgent app must be running and rendering frames.
+
+    // WIoTP
+    $ ./run-wiotp-cmd-app-client.sh setPollMsec=1000 wiotp-app-client.cfg
+
+    // MQTT
+    $ ./run-mqtt-cmd-app-client.sh setPollMsec=1000 mqtt-device.cfg
+    
+    
+#########
+Demonstrate an application custom Control and device command
+The Edgent app must be running.
+See the Edgent device's xterm shell to see output resulting from running these.
+
+    // WIoTP
+    $ ./run-wiotp-cmd-app-client.sh "demoControlEcho=hello there" wiotp-app-client.cfg
+
+    // WIoTP
+    $ ./run-wiotp-cmd-app-client.sh "demoCmdEcho=hello there" wiotp-app-client.cfg
+    

@@ -1,0 +1,90 @@
+These have been run on a Raspberry Pi and OSX Sierra with Edgent-1.1.0.
+See Installation and Setup below.
+
+Applications:
+
+EdgentFaceDetectApp - a basic Edgent app that uses a DirectProvider and a
+                        connector to IBM Watson IoT Platform to publish
+                        face detection events.  The app opens a local
+                        window and renders camera frames augmented with
+                        bounding boxes around the detected faces.
+                        
+                        For non-quickstart mode use WiotpFaceDetectAppClient
+                        to receive face detection events from WIoTP
+                        and render the images.
+                        
+                        For quickstart mode open your browser to
+                        the printed URL to see published face detection events.
+                        
+                        Use the --mqtt option to connect to a MQTT server
+                        instead of WIoTP.
+
+EdgentFaceDetectIotProviderApp - A version of the code that uses an IotProvider,
+                        hence the application responds to device commands
+                        from {Wiotp,Mqtt}FaceDetectCmdAppClient.
+                        
+{Wiotp,Mqtt}FaceDetectAppClient - a WIoTP/MQTT Application Client that listens for
+                        published face detection events and renders the images.
+                        Does not work with against a quickstart mode device.
+                        
+{Wiotp,Mqtt}WiotpFaceDetectCmdAppClient - a WIoTP/MQTT Application Client the publishes
+                        device commands to control the device.
+                        Only works for Edgent IotProvider based apps.
+                        A no-op for EdgentFaceDetectApp. 
+                        
+Installation and Setup:
+
+OSX Sierra
+- get Edgent 1.1.0 binary bundle from http://edgent.apache.org/docs/downloads
+  and extract it
+- install OpenCV - see README-OpenCV-OSX
+
+Raspberry Pi
+- get Edgent 1.1.0 binary bundle from http://edgent.apache.org/docs/downloads
+  and extract it 
+- install OpenCV - see README-OpenCV-Pi
+
+IBM Watson IoT Platform
+- https://internetofthings.ibmcloud.com
+  Scroll down to "Try it out for free!"
+  
+  You don't need to do anything for quickstart, just run
+  "EdgentFaceDetectApp --quickstart" and open the URL it prints out
+  in your browser.
+  
+  Click "Launch Bluemix" to create a free account and register a device
+  and application.
+
+To use an MQTT server instead of WIoTP, start your own MQTT server,
+or try a public one, and update scripts/mqtt-device.cfg accordingly.
+  
+Building and running the apps
+
+Building from the command line:
+    $ cd scripts
+    $ ./build.sh
+    
+Running the apps from the command line:
+    $ cd scripts
+    $ cat README
+    
+Exporting to another system:
+
+After building you can create a tarball to bring the apps over to
+another host where Edgent and OpenCV are installed and run from there.
+
+    $ tar czf builtSmartCameraDevice.tgz  smartcamera.device  # the whole project dir
+    
+    on another system - e.g., a setup Pi
+    $ tar zxf builtSmartCameraDevice.tgz
+    $ cd smartcamera.device/scripts
+    $ cat README
+
+
+Using Eclipse:
+
+Import the smartcamera.device project into Eclipse. You'll have to
+adjust the project's build path to take into account where you installed
+Edgent and OpenCV.  You can run the applications directly from Eclipse.
+
+e.g. select EdgentFaceDetectIotProviderApp.java > Run as > Java Application
