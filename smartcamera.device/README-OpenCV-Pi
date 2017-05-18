@@ -1,6 +1,6 @@
 Installing OpenCV on Raspberry Pi
   
-  NOTE: at the step cmake step (step 5) in the directions below, 
+  NOTE: at the cmake step (step 5) in the directions below, 
   where one confirms the correct info for python, notice the 
   JNI/Java wrapper info is NO.
   That seems to be a result of ant not being installed and in the path

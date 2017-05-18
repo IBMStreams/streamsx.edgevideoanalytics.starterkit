@@ -3,31 +3,35 @@ See Installation and Setup below.
 
 Applications:
 
-EdgentFaceDetectApp - a basic Edgent app that uses a DirectProvider and a
-                        connector to IBM Watson IoT Platform to publish
-                        face detection events.  The app opens a local
-                        window and renders camera frames augmented with
-                        bounding boxes around the detected faces.
+EdgentFaceDetectApp - a basic Edgent app that uses a DirectProvider 
+                        and an Edgent IotDevice based connector to
+                        publish face detection events and receive
+                        device commands.
                         
-                        For non-quickstart mode use WiotpFaceDetectAppClient
-                        to receive face detection events from WIoTP
-                        and render the images.
+                        Use the --mqtt option to connect to a general
+                        MQTT broker (more below).  Otherwise, the app connects
+                        to IBM Watson IoT Platform IoT hub.
                         
+                        The app opens a local window and renders camera
+                        frames augmented with bounding boxes around 
+                        detected faces.
+                        
+                        For MQTT mode, use the Mqtt*Client apps.
+                        
+                        For WIoTP mode, non-quickstart mode use Wiotp*Client apps.
                         For quickstart mode open your browser to
                         the printed URL to see published face detection events.
                         
-                        Use the --mqtt option to connect to a MQTT server
-                        instead of WIoTP.
 
 EdgentFaceDetectIotProviderApp - A version of the code that uses an IotProvider,
                         hence the application responds to device commands
-                        from {Wiotp,Mqtt}FaceDetectCmdAppClient.
+                        from {Mqtt,Wiotp}FaceDetectCmdAppClient.
                         
-{Wiotp,Mqtt}FaceDetectAppClient - a WIoTP/MQTT Application Client that listens for
+{Mqtt,Wiotp}FaceDetectAppClient - a MQTT/WIoTP Application Client that listens for
                         published face detection events and renders the images.
                         Does not work with against a quickstart mode device.
                         
-{Wiotp,Mqtt}WiotpFaceDetectCmdAppClient - a WIoTP/MQTT Application Client the publishes
+{Mqtt,Wiotp}WiotpFaceDetectCmdAppClient - a MQTT/WIoTP Application Client the publishes
                         device commands to control the device.
                         Only works for Edgent IotProvider based apps.
                         A no-op for EdgentFaceDetectApp. 
@@ -44,6 +48,33 @@ Raspberry Pi
   and extract it 
 - install OpenCV - see README-OpenCV-Pi
 
+You have a couple of choices for the IoT hub that the device connects to:
+
+  - A message hub that supports MQTT such as Apache ActiveMQ.
+  In this case the device application utilizes the Edgent MqttDevice connector.
+  
+  - Edgent has an Apache Kafka connector but it doesn't currently have
+  an IotDevice based connector to Kafka.  The device app currently
+  expects the use of an IotDevice based connector.
+  Adding a "KafkaDevice" (IotDevice interface to Kafka) can be easily
+  added to Edgent should the need arise.  Alternatively, the device
+  application can easily changed (EdgentFaceDetectApp.publishEvents())
+  to directly use the Kafka connector or any other connector.
+  
+  - IBM Watson IoT Platform.  WIoTP supports MQTT but organizes
+  device event and command topics in a stylized way.  In this case
+  the device application utilizes the Edgent IotpDevice connector. 
+  
+Basic MQTT IoT message hub
+- stand up your own MQTT broker such as Apache ActiveMQ
+  or utilize an existing MQTT broker instance.  Adjust scripts/mqtt.device
+  accordingly for the URL to the broker.  Use the "--mqtt" command line
+  option when starting the Edgent device application and use the Mqtt based
+  simple client applications.
+  
+  TODO: write a simple client app that starts up a local
+  ActiveMQ instance to run against.
+  
 IBM Watson IoT Platform
 - https://internetofthings.ibmcloud.com
   Scroll down to "Try it out for free!"
