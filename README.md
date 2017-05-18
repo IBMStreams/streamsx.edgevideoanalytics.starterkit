@@ -23,7 +23,11 @@ general face detection and then specific face recognition,
 to a system like the lower image, with a smart IoT device that does 
 the face detection, with cloud based streaming analytic applications doing
 additional analytics such as the face recognition.  
-Specifically this ![system sketch](readmeImg/sketch2.jpg).
+
+<b>The IoT hub can either be a general MQTT broker such as Apache ActiveMQ
+or it can be IBM Watson IoT Platform (or to Apache Kafka with a small
+change to the app; and new Kafka*ClientApp simple client apps).
+The following sketch is for the WIoTP mode configuration</b> ![system sketch](readmeImg/sketch2.jpg).
     
 Here's a [demo screenshot](readmeImg/faceDetect-demo-screenshot.png).  TBD watch this video.
 
@@ -59,8 +63,12 @@ The Smart Camera IoT device uses:
   - OpenCV for image processing
   - Raspberry Pi and Camera V2
   - Our [Smart Camera device](readmeImg/smart-camera.jpg)
+  - The device (and the simple clients) can connect to 
+    a general MQTT broker such as Apache ActiveMQ
+    or IBM Watson IoT Platform.  The device application can easily be
+    changed to connect to Apache Kafka.
 
-The backend cloud based part of the system uses:
+The backend IBM Streams cloud based analytics part of the kit uses:
   - IBM Bluemix / Watson Cloud Platform for the public cloud platform
   - IBM Watson IoT Platform for the enterprise IoT Device Hub service
   - The Streaming Analytic Service to run an IBM Streams based application
@@ -72,7 +80,7 @@ The backend cloud based part of the system uses:
 ## Status (11-May-2017)
 
   - Everything for the Smart Camera IoT device is present, including
-    integration with an IoT hub (WIoTP or general MQTT broker) and
+    integration with an IoT hub (general MQTT broker or WIoTP) and
     simple client applications
   - The IBM Streams based Streaming Analytic application for face recognition
     is still under construction and should be added soon.  Stay tuned!
@@ -90,11 +98,6 @@ For the centralized streaming analytics see [analytics.streams/README.md](analyt
 ## External Dependencies
 
 Details regarding the dependencies can be found in the smartcamera.device and analytics.streams component's documentation.
-
-  - Apache Edgent
-  - OpenCV
-  - TODO IBM Streams
-  - TODO streamsx.opencv
 
 # License
 
