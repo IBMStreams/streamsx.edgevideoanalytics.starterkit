@@ -12,7 +12,8 @@ The kit is a work in progress.  See Status below.
 The Smart Camera IoT Device portion of the kit was part of the 
 ApacheCon/ApacheIoT 2017 talk:
 "Video Analytics at the Edge: Fun with Apache Edgent, OpenCv, and a Raspberry Pi".
-TODO-link
+[Slides](http://events.linuxfoundation.org/sites/events/files/slides/EdgentOpenCVRevised-3bak.pdf)
+[Audio](https://feathercast.apache.org/2017/05/30/apachecon-miami-2017-video-analytics-at-the-edge-fun-with-apache-edgent-opencv-and-a-raspberry-pi-william-marshall-dale-labossiere/)
 
 ## Video Analytics at the Edge
   
