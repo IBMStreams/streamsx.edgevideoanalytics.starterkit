@@ -1,14 +1,70 @@
-  Installing OpenCV on OSX Sierra
+# Installing OpenCV on OSX Sierra and El Capitan:
   
-  I followed the directions below.
-  You MUST include --with-java to get the OpenCV java bindings.
-  You can exclude the python stuff if you like.
-  
-  http://www.pyimagesearch.com/2016/12/19/install-opencv-3-on-macos-with-homebrew-the-easy-way/
-  
-  The jar ends up here:  /usr/local/opt/opencv3/share/OpenCV/java/opencv-320.jar
+Previously, it was possible to install OpenCV bindings on OSX via homebrew, using the --with-java argument.
+As of OpenCV version 3.3, the [--with-java option was removed](https://github.com/Homebrew/homebrew-core/issues/17106), so it is necessary to build OpenCV from source
+on OSX in order to generate the java bindings required for this demo. 
+
+## Obtain OpenCV
+To build from source, grab a copy of OpenCV 3.2.0 from the OpenCV releases site:
+https://github.com/opencv/opencv/releases
+
+## Download dependencies
+OpenCV requires having CMake and Ant installed. On OSX, the easiest way to install these are using homebrew:
+```
+brew install ant
+brew install cmake
+```
+
+If you use Python, it is highly recommended that you create a virtual environment. It takes 30 seconds, and it 
+prevents the pollution of your Python environment:
+```
+$ pip install virtualenv virtualenvwrapper 
+$ mkvirtualenv cv
+$ workon cv
+```
+
+## Build OpenCV
+
+Unzip the source dir, and execute the following commands:
+```
+$ cd opencv-3.2.0
+$ mkdir build
+$ cd build
+$ cmake ..
+```
+
+By default, cmake will configure OpenCV to be installed in `/usr/local`, although you may specify another location if you 
+wish, although you will have to run cmake again.
+
+If all goes well, cmake will configure OpenCV the build the Java bindings. Make sure that the output contains a line that 
+says `Java wrappers:    YES` such as the following:
+
+```
+Java:
+--     ant:                         /usr/local/bin/ant (ver 1.10.1)
+--     JNI:                         /System/Library/Frameworks/JavaVM.framework/Headers /System/Library/Frameworks/JavaVM.framework/Headers /System/Library/Frameworks/JavaVM.framework/Headers
+--     Java wrappers:               YES
+--     Java tests:                  YES
+```
+
+To build and install OpenCV:
+
+```
+$ make -j 8  # Uses 8 threads 
+$ make install
+```
+
+OpenCV should now be installed. Verify this by ensuring that the OpenCV jar file exists:
+```
+$ ls /usr/local/share/OpenCV/java/
+libopencv_java330.dylib	opencv-320.jar
+```
+
+# OpenCV and Eclipse
+
+  The jar ends up here:  /usr/local/share/OpenCV/java/opencv-320.jar
   Its native library dependency (libopencv_java320.dylib) is in the same directory.
-  
+    
   To build in Eclipse you will also have to register the native lib for the jar
   -- gleaned from https://deepturf.com/2016/08/08/install-opencv-on-mac-osx/:
      Eclipse > Preferences > Java > Build Path > User Libraries
